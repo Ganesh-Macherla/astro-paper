@@ -49,16 +49,21 @@ const structuredData = {
 ---
 
 <!doctype html>
+
 <html
   dir={SITE.dir}
-  lang=`${SITE.lang ?? "en"}`
+  lang={`${SITE.lang ?? "en"}`}
   class={`${scrollSmooth && "scroll-smooth"}`}
 >
   <head>
     <meta charset="UTF-8" />
+
     <meta name="viewport" content="width=device-width" />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
     <link rel="canonical" href={canonicalURL} />
+
     <meta name="generator" content={Astro.generator} />
 
     <!-- Load Font -->
@@ -69,15 +74,22 @@ const structuredData = {
 
     <!-- General Meta Tags -->
     <title>{title}</title>
+
     <meta name="title" content={title} />
+
     <meta name="description" content={description} />
+
     <meta name="author" content={author} />
+
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:title" content={title} />
+
     <meta property="og:description" content={description} />
+
     <meta property="og:url" content={canonicalURL} />
+
     <meta property="og:image" content={socialImageURL} />
 
     <!-- Article Published/Modified time -->
@@ -89,6 +101,7 @@ const structuredData = {
         />
       )
     }
+
     {
       modDatetime && (
         <meta
@@ -100,9 +113,13 @@ const structuredData = {
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
+
     <meta property="twitter:url" content={canonicalURL} />
+
     <meta property="twitter:title" content={title} />
+
     <meta property="twitter:description" content={description} />
+
     <meta property="twitter:image" content={socialImageURL} />
 
     <!-- Google JSON-LD Structured data -->
@@ -112,8 +129,7 @@ const structuredData = {
       set:html={JSON.stringify(structuredData)}
     />
 
-    <!-- Enable RSS feed auto-discovery  -->
-    <!-- https://docs.astro.build/en/recipes/rss/#enabling-rss-feed-auto-discovery -->
+    <!-- Enable RSS feed auto-discovery -->
     <link
       rel="alternate"
       type="application/rss+xml"
@@ -124,9 +140,6 @@ const structuredData = {
     <meta name="theme-color" content="" />
 
     {
-      // If PUBLIC_GOOGLE_SITE_VERIFICATION is set in the environment variable,
-      // include google-site-verification tag in the heading
-      // Learn more: https://support.google.com/webmasters/answer/9008080#meta_tag_verification&zippy=%2Chtml-tag
       PUBLIC_GOOGLE_SITE_VERIFICATION && (
         <meta
           name="google-site-verification"
@@ -135,17 +148,19 @@ const structuredData = {
       )
     }
 
+    <!-- View transitions -->
     <ClientRouter />
 
-    <!-- Minimal inline script to prevent FOUC - sets theme immediately -->
+    <!-- Prevent flash -->
     <script is:inline>
       (function () {
-        const initialColorScheme = ""; // "light" | "dark"
+        const initialColorScheme = "";
         const currentTheme = localStorage.getItem("theme");
 
         function getPreferTheme() {
           if (currentTheme) return currentTheme;
           if (initialColorScheme) return initialColorScheme;
+
           return window.matchMedia("(prefers-color-scheme: dark)").matches
             ? "dark"
             : "light";
@@ -153,20 +168,183 @@ const structuredData = {
 
         const themeValue = getPreferTheme();
 
-        // Set theme immediately to prevent flash
         document.firstElementChild?.setAttribute("data-theme", themeValue);
 
-        // Export minimal API for external script
         window.theme = {
           themeValue: themeValue,
+
           getTheme: () => window.theme.themeValue,
+
           setTheme: val => {
             window.theme.themeValue = val;
           },
         };
       })();
     </script>
+
+    <!-- Smooth cinematic animations -->
+    <style is:global>
+      :root {
+        --transition-duration: 0.45s;
+      }
+
+      /* ===== VIEW TRANSITIONS ===== */
+
+      ::view-transition-old(root),
+      ::view-transition-new(root) {
+        animation-duration: var(--transition-duration);
+        animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      ::view-transition-old(root) {
+        animation-name: smooth-fade-out;
+      }
+
+      ::view-transition-new(root) {
+        animation-name: smooth-fade-in;
+      }
+
+      @keyframes smooth-fade-out {
+        from {
+          opacity: 1;
+          transform: translateY(0px);
+          filter: blur(0px);
+        }
+
+        to {
+          opacity: 0;
+          transform: translateY(10px);
+          filter: blur(6px);
+        }
+      }
+
+      @keyframes smooth-fade-in {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+          filter: blur(6px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0px);
+          filter: blur(0px);
+        }
+      }
+
+      /* ===== GLOBAL LINK ANIMATIONS ===== */
+
+      a,
+      button {
+        transition:
+          color 0.25s ease,
+          transform 0.25s ease,
+          opacity 0.25s ease,
+          text-shadow 0.25s ease;
+      }
+
+      /* ===== NAVBAR EFFECT ===== */
+
+      nav a:hover {
+        color: #ff7b00;
+
+        transform: translateY(-2px);
+
+        text-shadow: 0 0 8px rgba(255, 123, 0, 0.35);
+      }
+
+      /* ===== HOMEPAGE ENTRANCE ===== */
+
+      .animate-hero {
+        animation: heroReveal 1s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      @keyframes heroReveal {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+          filter: blur(10px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0px);
+          filter: blur(0px);
+        }
+      }
+
+      .animate-section-delay-1 {
+        animation: fadeUp 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .animate-section-delay-2 {
+        animation: fadeUp 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0px);
+        }
+      }
+
+      /* ===== MAIN CONTENT LOAD ===== */
+
+      main {
+        animation: page-enter 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      @keyframes page-enter {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0px);
+        }
+      }
+
+      /* ===== PROJECT CARD HOVER ===== */
+
+      .rounded-lg {
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease,
+          border-color 0.3s ease;
+      }
+
+      .rounded-lg:hover {
+        transform: translateY(-4px);
+      }
+
+      /* ===== SOCIAL ICON HOVER ===== */
+
+      svg {
+        transition:
+          transform 0.25s ease,
+          opacity 0.25s ease;
+      }
+
+      svg:hover {
+        transform: scale(1.12);
+      }
+
+      /* ===== SHARED TITLE TRANSITIONS ===== */
+
+      ::view-transition-old(*),
+      ::view-transition-new(*) {
+        animation-duration: 0.45s;
+      }
+    </style>
   </head>
+
   <body>
     <slot />
 
