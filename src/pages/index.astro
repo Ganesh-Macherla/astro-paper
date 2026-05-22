@@ -31,7 +31,7 @@ const recentPosts = sortedPosts.slice(0, SITE.postPerIndex);
     <section>
       <ul>
         {
-          recentPosts.map(post => (
+          recentPosts.map((post: any) => (
             <Card {...post} />
           ))
         }
