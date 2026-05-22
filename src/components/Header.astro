@@ -10,15 +10,14 @@ import { SITE } from "@/config";
 
 const { pathname } = Astro.url;
 
+const BASE = "/astro-paper";
+
 // Remove trailing slash from current pathname if exists
 const currentPath =
   pathname.endsWith("/") && pathname !== "/" ? pathname.slice(0, -1) : pathname;
 
 const isActive = (path: string) => {
-  const currentPathArray = currentPath.split("/").filter(p => p.trim());
-  const pathArray = path.split("/").filter(p => p.trim());
-
-  return currentPath === path || currentPathArray[0] === pathArray[0];
+  return currentPath.startsWith(`${BASE}${path}`);
 };
 ---
 
@@ -43,7 +42,7 @@ const isActive = (path: string) => {
     ]}
   >
     <a
-      href="/"
+      href={`${BASE}/`}
       class="absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none"
     >
       {SITE.title}
@@ -74,14 +73,17 @@ const isActive = (path: string) => {
         ]}
       >
         <li class="col-span-2">
-          <a href="/posts" class:list={{ "active-nav": isActive("/posts") }}>
+          <a
+            href={`${BASE}/posts`}
+            class:list={{ "active-nav": isActive("/posts") }}
+          >
             Posts
           </a>
         </li>
 
         <li class="col-span-2">
           <a
-            href="/projects"
+            href={`${BASE}/projects`}
             class:list={{ "active-nav": isActive("/projects") }}
           >
             Projects
@@ -89,13 +91,19 @@ const isActive = (path: string) => {
         </li>
 
         <li class="col-span-2">
-          <a href="/tags" class:list={{ "active-nav": isActive("/tags") }}>
+          <a
+            href={`${BASE}/tags`}
+            class:list={{ "active-nav": isActive("/tags") }}
+          >
             Tags
           </a>
         </li>
 
         <li class="col-span-2">
-          <a href="/about" class:list={{ "active-nav": isActive("/about") }}>
+          <a
+            href={`${BASE}/about`}
+            class:list={{ "active-nav": isActive("/about") }}
+          >
             About
           </a>
         </li>
@@ -104,7 +112,7 @@ const isActive = (path: string) => {
           SITE.showArchives && (
             <li class="col-span-2">
               <LinkButton
-                href="/archives"
+                href={`${BASE}/archives`}
                 class:list={[
                   "focus-outline flex justify-center p-3 sm:p-1",
                   {
@@ -123,7 +131,7 @@ const isActive = (path: string) => {
 
         <li class="col-span-1 flex items-center justify-center">
           <LinkButton
-            href="/search"
+            href={`${BASE}/search`}
             class:list={[
               "focus-outline flex p-3 sm:p-1",
               { "[&>svg]:stroke-accent": isActive("/search") },
@@ -181,6 +189,5 @@ const isActive = (path: string) => {
 
   toggleNav();
 
-  // Runs on view transitions navigation
   document.addEventListener("astro:after-swap", toggleNav);
 </script>
