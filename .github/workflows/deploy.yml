@@ -1,8 +1,4 @@
-Here is your updated `deploy.yml` file.
 
-To fix the deprecation warnings, the `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true` environment variable has been added at the top level. Additionally, your explicit build environment version has been bumped from `node-version: 20` to `node-version: 24` to match, ensuring your Astro site builds on the latest LTS release.
-
-```yaml
 name: Deploy to GitHub Pages
 
 on:
